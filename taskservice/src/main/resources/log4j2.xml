@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<Configuration>
+	<Appenders>
+		<Console name="Console" target="SYSTEM_OUT">
+			<PatternLayout
+				pattern="%style{%d{ISO8601}}{black} %highlight{%-5level }[%style{%t}{bright,blue}]%style{%c{1.}}{bright,yellow}: %msg%n%throwable" />
+		</Console>
+
+		<RollingFile name="RollingFile" fileName="./logs/taskservice.log"
+			filePattern="./logs/$${date:yyyy-MM}/taskservice/taskservice-%d{yyyy-MMMM-dd}-%i.log.zip">
+			<PatternLayout>
+				<pattern>%d %p %C{1.}:%L [%t] %m%n</pattern>
+			</PatternLayout>
+			<Policies>
+				<SizeBasedTriggeringPolicy size="50MB" />
+				<TimeBasedTriggeringPolicy interval="1" />
+			</Policies>
+		</RollingFile>
+		
+		<RollingFile name="SqlRollingFile" fileName="./logs/taskservice-sql.log"
+			filePattern="./logs/$${date:yyyy-MM}/taskservice/taskservice-sql-%d{yyyy-MMMM-dd}-%i.log.zip">
+			<PatternLayout>
+				<pattern>%d %p %C{1.}:%L [%t] %m%n</pattern>
+			</PatternLayout>
+			<Policies>
+				<SizeBasedTriggeringPolicy size="50MB" />
+				<TimeBasedTriggeringPolicy interval="1" />
+			</Policies>
+		</RollingFile>
+	</Appenders>
+
+	<Loggers>
+		<Root level="info">
+			<AppenderRef ref="Console" />
+			<AppenderRef ref="RollingFile" />
+		</Root>
+		<Logger name="com.narola.core" level="all" additivity="false">
+			<AppenderRef ref="RollingFile" />
+		</Logger>
+		<Logger name="com.narola.taskservice" level="all" additivity="false">
+			<AppenderRef ref="RollingFile" />
+		</Logger>
+		<Logger name="com.narola.authenticationservice" level="all" additivity="false">
+			<AppenderRef ref="RollingFile" />
+		</Logger>			
+		
+		<!-- <Logger name="org.hibernate.SQL" level="debug" additivity="false">
+            <AppenderRef ref="SqlRollingFile"/>
+        </Logger>
+        <Logger name="org.hibernate.type.descriptor.sql" level="trace" additivity="false">
+            <AppenderRef ref="SqlRollingFile"/>
+        </Logger> -->	
+	</Loggers>
+</Configuration>
